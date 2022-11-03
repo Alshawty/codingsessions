@@ -1,6 +1,6 @@
-import pygame
-import math
-import random
+from player import *
+from Bullet import *
+from level_creation import *
 
 
 # player controls a cube that he can move up and down with the arrow keys
@@ -8,6 +8,7 @@ import random
 # the goal is to shoot the enemy cube
 # the enemy cube moves up and down and shoots bullets
 # the player and enemy cubes have health bars
+
 
 pygame.init()
 pygame.display.list_modes()
@@ -18,58 +19,6 @@ GREEN = ( 0, 255, 0)
 RED = ( 255, 0, 0)
 BLUE = ( 0, 0, 255)
 
-
-class Player(pygame.sprite.Sprite):
-    # this class represents the player
-    def __init__(self, x, y, color, ):
-        super().__init__()
-        self.image = pygame.Surface([20, 20])
-        self.image.fill(color)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.speed = 5
-        self.health = 50
-
-
-    def update(self):
-        # move up and down
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP]:
-            self.rect.y -= self.speed
-        if keys[pygame.K_DOWN]:
-            self.rect.y += self.speed
-
-        # check if the player hits a wall
-        block_hit_list = pygame.sprite.spritecollide(self, wall_list, False)
-        for block in block_hit_list:
-            if self.speed > 0:
-                self.rect.bottom = block.rect.top
-            else:
-                self.rect.top = block.rect.bottom
-
-# class Bullet
-# this class represents the bullets
-class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction):
-        super().__init__()
-        self.image = pygame.Surface([10, 10])
-        self.image.fill(BLACK)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.speed = 10
-        # direction is tuple (x, y)
-        self.direction = direction
-    
-
-
-    def updatex(self):
-        # update position according to direction and speed
-        self.rect.x += self.direction[0] * self.speed
-        self.rect.y += self.direction[1] * self.speed
-
-
 size = (700, 500)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("My First Game")
@@ -79,36 +28,8 @@ done = False
 carryOn = True
 clock = pygame.time.Clock()
 
-# create one wall around the screen
-wall_list = pygame.sprite.Group()
-wall = pygame.sprite.Sprite()
-wall.image = pygame.Surface([700, 10])
-wall.rect = wall.image.get_rect()
-wall.rect.x = 0
-wall.rect.y = 0
-wall_list.add(wall)
 
-wall = pygame.sprite.Sprite()
-wall.image = pygame.Surface([10, 500])
-wall.rect = wall.image.get_rect()
-wall.rect.x = 0
-wall.rect.y = 0
-wall_list.add(wall)
-
-wall = pygame.sprite.Sprite()
-wall.image = pygame.Surface([700, 10])
-wall.rect = wall.image.get_rect()
-wall.rect.x = 0
-wall.rect.y = 490
-wall_list.add(wall)
-
-wall = pygame.sprite.Sprite()
-wall.image = pygame.Surface([10, 500])
-wall.rect = wall.image.get_rect()
-wall.rect.x = 690
-wall.rect.y = 0
-wall_list.add(wall)
-
+wall_list = create_room()
 
 
 all_sprites_list = pygame.sprite.Group()
@@ -128,18 +49,7 @@ all_sprites_list.add(player)
 all_sprites_list.add(enemy)
 
 
-# create map with random walls
-for i in range(30):
-    wall = pygame.sprite.Sprite()
-    wall.image = pygame.Surface([random.randint(0,100), random.randint(0,100)])
-    wall.rect = wall.image.get_rect()
-    wall.rect.x = random.randrange(0, 700)
-    wall.rect.y = random.randrange(0, 500)
-    # if wall touches player or enemy, move it
-    while pygame.sprite.collide_rect(wall, player) or pygame.sprite.collide_rect(wall, enemy):
-        wall.rect.x = random.randrange(0, 700)
-        wall.rect.y = random.randrange(0, 500)
-    wall_list.add(wall)
+create_objects(wall_list, player, enemy)
 
 
 hold_right = False
