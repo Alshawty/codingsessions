@@ -9,15 +9,15 @@ from level_creation import *
 # the enemy cube moves up and down and shoots bullets
 # the player and enemy cubes have health bars
 
-
-pygame.init()
-pygame.display.list_modes()
-
 BLACK = ( 0, 0, 0)
 WHITE = ( 255, 255, 255)
 GREEN = ( 0, 255, 0)
 RED = ( 255, 0, 0)
 BLUE = ( 0, 0, 255)
+
+pygame.init()
+pygame.display.list_modes()
+
 
 size = (700, 500)
 screen = pygame.display.set_mode(size)
@@ -29,6 +29,7 @@ carryOn = True
 clock = pygame.time.Clock()
 
 
+# creates the room and returns list of main walls
 wall_list = create_room()
 
 
@@ -49,6 +50,7 @@ all_sprites_list.add(player)
 all_sprites_list.add(enemy)
 
 
+#level creation file, creates objects arount players
 create_objects(wall_list, player, enemy)
 
 
@@ -63,7 +65,7 @@ hold_down = False
 # enemy shoots bullets
 
 
-
+# main loop
 while carryOn and not done:
     # --- Main event loop
     for event in pygame.event.get():
