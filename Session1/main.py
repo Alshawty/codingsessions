@@ -169,7 +169,9 @@ while carryOn and not done:
     for bullet in bullet_list:
         block_hit_list = pygame.sprite.spritecollide(bullet, wall_list, False)
         for block in block_hit_list:
-            bullet_list.remove(bullet)
+            # bugfix, sometimes bug "list.remove(x) : x not in list" occurs
+            if (bullet in bullet_list):
+                bullet_list.remove(bullet)
             all_sprites_list.remove(bullet) 
     
     
